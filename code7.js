@@ -1,8 +1,8 @@
 var myArray = ["a",1,2];
 
-double = function(element)
+var double = function(element)
 {
-	if( element==parseInt(element) )
+	if( element === parseInt(element) )
 	{
 		return 2*element;
 	}
