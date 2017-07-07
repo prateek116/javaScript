@@ -5,13 +5,13 @@ var checklist= [/book/ , /chocolate/ , /pills/ ];
 
 var digit = /\d+.\d+/;
 var salesTax = 0;
-var Total = 0;
+var total = 0;
 
 
-function checkIfImported(element)
+function checkIfimported(element)
 {
-	var Imported = /imported/;
-	return ( Imported.test(element) );
+	var imported = /imported/;
+	return ( imported.test(element) );
 
 }
 
@@ -37,11 +37,7 @@ function getPriceOfItem(element)
 function Round(element)
 {
 	var remainder = element%.05;
-	//remainder = remainder.toFixed(2);
-	//console.log(remainder);
-	console.log(remainder);
 	remainder = +(remainder.toFixed(3));
-	console.log(remainder);
 	if( remainder < .025 )
 	{
 		return element - remainder;
@@ -57,43 +53,38 @@ function finalReplacement(taxPercent,iterator)
 {
 	var Price = getPriceOfItem(inputItems[iterator]);
 	Price = parseFloat(Price);
-	//Price.toFixed();
-	//console.log(Price);
 	var tax = (Price*taxPercent)/100;
-	//console.log(tax);
 	var taxRoundup = Round(tax);
-	//taxRoundup = taxRoundup.toFixed(2);
-	//console.log(taxRoundup);
 	var newPrice = Price + taxRoundup;
 	salesTax += (newPrice - Price);
-//	console.log(salesTax);
-	Total = Total+ newPrice;
-	console.log(Total);
+	total = total+ newPrice;
 	newPrice = newPrice.toFixed(2);
 
-	//console.log(newPrice);
 	inputItems[iterator] = inputItems[iterator].replace(digit,newPrice);
+
+
 	inputItems[iterator] = inputItems[iterator].replace(/ at /," : ");
+	
+
 }
 
 
-
-for( var iterator = 0 ; iterator < inputItems.length ; iterator++ )
+main = function loop(element,index)
 {
-
-	if( checkIfImported(inputItems[iterator]) )
+	if( checkIfimported(element) )
 	{
+	
 
-		if( checkIfFoodBookMedicine(inputItems[iterator]))
+		if( checkIfFoodBookMedicine(element))
 		{
-			
-			finalReplacement(5,iterator);
+	
+			finalReplacement(5,index);
 
 		}
 
 		else
 		{
-			finalReplacement(15,iterator);
+			finalReplacement(15,index);
 		}
 
 
@@ -101,27 +92,34 @@ for( var iterator = 0 ; iterator < inputItems.length ; iterator++ )
 	}
 	else
 	{
-		if(checkIfFoodBookMedicine(inputItems[iterator]))
+		if(checkIfFoodBookMedicine(element))
 		{
 
-			finalReplacement(0,iterator);
+			finalReplacement(0,index);
 
 		}
 
 		else
 		{
-			finalReplacement(10,iterator);
+			finalReplacement(10,index);
 
 		}
-	}
+	}	
 }
 
-for(iterator = 0; iterator < inputItems.length; iterator++)
+
+
+inputItems.map(main); 
+
+
+
+inputItems.map(function loop(element)
 {
-	console.log(inputItems[iterator]);
-}
+	console.log(element);
+});
+
 salesTax = salesTax.toFixed(2);
-Total = Total.toFixed(2);
+total = total.toFixed(2);
 console.log("SalesTaxes: ",salesTax);
-console.log("Total: ",Total);
+console.log("total: ",total);
 
