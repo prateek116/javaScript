@@ -7,20 +7,26 @@ var salesTax = 0;
 
 var total = 0;
 
-exports.salesTax = salesTax;
-exports.total = total;
 
 
-var SalesTaxCalculator = function(quantity,name,price)
+
+var Cart = function(quantity,item)
 {
     this.quantity = quantity;
-    this.name = name;
-    this.price = price; 
+    this.finalPrice = 0;
+    this.item = item;
 }
 
-SalesTaxCalculator.prototype = 
+var Item = function(name,price)
 {
-    constructor: SalesTaxCalculator,
+    this.name = name;
+    this.price = price;
+}
+
+
+Cart.prototype = 
+{
+    constructor: Cart,
 
 
     checkIfImported: function(element)
@@ -40,15 +46,18 @@ SalesTaxCalculator.prototype =
 
     finalReplacement: function(taxPercent)
     {
-        var price = this.price;
+        var price = (this.item.price);
         price = parseFloat(price);
+        var quantity = (this.quantity);
+        quantity = parseFloat(quantity);
+        price *= quantity;
         var tax = (price*taxPercent)/100.00;
         var taxRoundup = this.round(tax);
         var newPrice = price + taxRoundup;
         salesTax += (newPrice-price);
         total += newPrice;
         newPrice = newPrice.toFixed(2);
-        this.price = newPrice;
+        this.finalPrice = newPrice;
     
     },
 
@@ -69,15 +78,15 @@ SalesTaxCalculator.prototype =
     },
 
 
-    main: function()
+    calculateTax: function()
     {
         
 
 
-        if( this.checkIfImported(this.name) )
+        if( this.checkIfImported(this.item.name) )
         {
 
-            if( this.checkIfFoodBookMedicine(this.name))
+            if( this.checkIfFoodBookMedicine(this.item.name))
             {
                     
             
@@ -95,7 +104,7 @@ SalesTaxCalculator.prototype =
         }
         else
         {
-            if(this.checkIfFoodBookMedicine(object.name))
+            if(this.checkIfFoodBookMedicine(this.item.name))
             {
 
                 this.finalReplacement(0);
@@ -115,7 +124,7 @@ SalesTaxCalculator.prototype =
 
     output: function()
     {
-        console.log( this.quantity + " " + this.name + ": " + this.price );
+        console.log( this.quantity + " " + this.item.name + ": " + this.finalPrice );
     }
 
 
@@ -132,9 +141,10 @@ var readlineSync = require('readline-sync');
             var quantity = readlineSync.question("Enter Qantity of input item \n");
             var name = readlineSync.question("Enter Name of input item \n");
             var price = readlineSync.question("Enter Total price of input item \n");
-            var object = new SalesTaxCalculator(quantity,name,price);
-            object.main();
-            object.output();
+            var item = new Item(name,price);
+            var cart = new Cart(quantity,item);
+            cart.calculateTax();
+            cart.output();
             numberOfInputItems--;
         }
 
