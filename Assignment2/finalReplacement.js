@@ -1,20 +1,17 @@
+var globalVar = require("./oopsSalesTaxCalculator.js");
 
-var roundup = require("./Round.js");
-var globalVariables = require("./input.js");
-
-
-exports.finalReplacement = function(taxPercent,index)
+exports.finalReplacement = function(taxPercent)
 {
 
-    var price = globalVariables.inputDetails[index]["Price"];
-
+    var price = this.price;
+    console.log(price);
     price = parseFloat(price);
     var tax = (price*taxPercent)/100.00;
-    var taxRoundup = roundup.round(tax);
+    var taxRoundup = this.round(tax);
     var newPrice = price + taxRoundup;
-    globalVariables.salesTax += (newPrice-price);
-    globalVariables.total += newPrice;
+    globalVar.salesTax += (newPrice-price);
+    globalVar.total += newPrice;
     newPrice = newPrice.toFixed(2);
-    globalVariables.inputDetails[index]["Price"] = newPrice;
+    this.price = newPrice;
     
 }

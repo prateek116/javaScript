@@ -3,5 +3,5 @@ exports.checkIfImported = function (element)
 {
     var imported = /imported/i;
     
-    return imported.test(element["name"]);
+    return imported.test(element);
 }
